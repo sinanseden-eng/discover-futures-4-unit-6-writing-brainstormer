@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Description Brainstormer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #0f172a; /* Slate 900 */
+            color: #f8fafc;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(14, 165, 233, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(245, 158, 11, 0.05) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        .serif { font-family: 'Playfair Display', serif; }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Tabs for Teacher Section */
+        .tab-btn { transition: all 0.3s ease; }
+        .tab-btn.active {
+            background-color: #0ea5e9; /* Sky 500 */
+            color: #fff;
+            border-color: #0ea5e9;
+            box-shadow: 0 0 15px rgba(14, 165, 233, 0.4);
+        }
+
+        /* Ranking Badges */
+        .rank-badge {
+            transition: all 0.2s;
+            cursor: pointer;
+            user-select: none;
+        }
+        .rank-badge.selected {
+            background-color: #f59e0b; /* Amber 500 */
+            color: #0f172a;
+            border-color: #f59e0b;
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+        }
+
+        /* Animations */
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        /* Print Styles - Formats the digital inputs into a clean paper outline */
+        @media print {
+            @page { size: A4 portrait; margin: 15mm; }
+            body { background: white !important; color: black !important; font-size: 11pt; display: block;}
+            .print-hide { display: none !important; }
+            .glass-panel { box-shadow: none !important; border: none !important; background: transparent !important; padding: 0 !important; }
+            
+            #print-header { display: block !important; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px;}
+            #print-header h1 { font-family: 'Playfair Display', serif; font-size: 24pt; font-weight: bold; }
+            
+            textarea {
+                border: none !important;
+                background: transparent !important;
+                resize: none !important;
+                overflow: hidden !important;
+                color: black !important;
+                font-family: 'Outfit', sans-serif;
+                font-size: 11pt;
+                padding: 0 !important;
+            }
+            .step-container { border-bottom: 1px solid #ccc; padding-bottom: 15px; margin-bottom: 15px; page-break-inside: avoid; }
+            .step-title { color: #000 !important; font-weight: bold; font-size: 12pt; margin-bottom: 5px;}
+            
+            #student-workspace { display: block !important; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col p-4 md:p-8">
+
+    <!-- Print Only Header -->
+    <div id="print-header" class="hidden text-center mb-8">
+        <h1>My Favorite Room</h1>
+        <p class="uppercase tracking-widest text-xs font-bold mt-1">Descriptive Writing Outline</p>
+    </div>
+
+    <header class="w-full max-w-6xl mx-auto text-center mb-8 print-hide fade-in">
+        <div class="inline-block px-4 py-1 rounded-full border border-sky-500/30 bg-sky-500/10 text-sky-400 text-xs font-bold tracking-[0.2em] uppercase mb-4">
+            Writing Strategy: Noticing & Describing
+        </div>
+        <h1 class="text-4xl md:text-6xl font-bold serif text-white mb-4">
+            The Sensory <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-amber-400 italic">Blueprint</span>
+        </h1>
+        <p class="text-slate-400 text-lg max-w-2xl mx-auto">
+            A great description relies on all five senses to bring a room to life. Explore the vocabulary, then draft your outline.
+        </p>
+    </header>
+
+    <main class="w-full max-w-6xl mx-auto space-y-8 flex-grow">
+
+        <!-- ========================================== -->
+        <!-- TEACHER SECTION: SENSORY WORD BANK         -->
+        <!-- ========================================== -->
+        <section class="glass-panel rounded-2xl p-6 md:p-8 print-hide fade-in border-t-4 border-t-sky-500" style="animation-delay: 0.1s; opacity: 0;">
+            <div class="flex justify-between items-center mb-6 border-b border-slate-700 pb-4">
+                <h2 class="text-2xl font-bold text-white uppercase tracking-widest flex items-center gap-3">
+                    <i class="fa-solid fa-chalkboard-user text-sky-400"></i> Teacher's Word Bank
+                </h2>
+                <button onclick="toggleTeacherPanel()" id="btn-toggle-teacher" class="text-slate-400 hover:text-white text-sm uppercase tracking-widest transition">Hide Panel <i class="fa-solid fa-chevron-up ml-1"></i></button>
+            </div>
+
+            <div id="teacher-panel-content">
+                <p class="text-slate-400 mb-6 text-sm">Project this on the board! Show students how to use advanced adjectives and strong associations to describe their rooms.</p>
+                
+                <!-- Category Tabs -->
+                <div class="flex flex-wrap justify-center gap-3 mb-8">
+                    <button onclick="showVocab('sight')" id="tab-sight" class="tab-btn active px-6 py-2 rounded-full border border-slate-600 text-slate-300 font-bold uppercase tracking-widest text-xs flex items-center gap-2">
+                        <i class="fa-solid fa-eye"></i> Sight & Space
+                    </button>
+                    <button onclick="showVocab('sound')" id="tab-sound" class="tab-btn px-6 py-2 rounded-full border border-slate-600 text-slate-300 font-bold uppercase tracking-widest text-xs flex items-center gap-2 hover:border-sky-400">
+                        <i class="fa-solid fa-ear-listen"></i> Sounds
+                    </button>
+                    <button onclick="showVocab('smell')" id="tab-smell" class="tab-btn px-6 py-2 rounded-full border border-slate-600 text-slate-300 font-bold uppercase tracking-widest text-xs flex items-center gap-2 hover:border-sky-400">
+                        <i class="fa-solid fa-wind"></i> Smells
+                    </button>
+                    <button onclick="showVocab('atmosphere')" id="tab-atmosphere" class="tab-btn px-6 py-2 rounded-full border border-slate-600 text-slate-300 font-bold uppercase tracking-widest text-xs flex items-center gap-2 hover:border-sky-400">
+                        <i class="fa-solid fa-heart"></i> Atmosphere
+                    </button>
+                </div>
+
+                <!-- Word Grid -->
+                <div id="vocab-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Injected by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- STUDENT WORKSPACE: RANKING & PLANNING      -->
+        <!-- ========================================== -->
+        <section id="student-workspace" class="glass-panel rounded-2xl p-6 md:p-10 fade-in border-t-4 border-t-amber-500" style="animation-delay: 0.2s; opacity: 0;">
+            
+            <div class="print-hide">
+                <h2 class="text-3xl font-bold text-white mb-2 serif">Your Writing Workspace</h2>
+                <p class="text-slate-400 mb-8 border-b border-slate-700 pb-6">Follow the 5 steps to plan your descriptive article. Type your ideas directly into the boxes below.</p>
+            </div>
+
+            <!-- Pre-Task: Ranking -->
+            <div class="mb-10 bg-slate-900/50 p-6 rounded-xl border border-slate-700 print-hide">
+                <div class="flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-full bg-amber-500/20 text-amber-500 flex items-center justify-center font-bold border border-amber-500/30 flex-shrink-0">1</div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white mb-2">Understand the Task: Prioritize Qualities</h3>
+                        <p class="text-sm text-slate-400 mb-4">Think about your favorite room. Select the <strong class="text-amber-400">Top 3</strong> qualities that are most important to you.</p>
+                        
+                        <div class="flex flex-wrap gap-3" id="quality-tags">
+                            <span onclick="toggleQuality(this)" class="rank-badge bg-slate-800 border border-slate-600 text-slate-300 px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-widest">Comfort</span>
+                            <span onclick="toggleQuality(this)" class="rank-badge bg-slate-800 border border-slate-600 text-slate-300 px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-widest">Decoration</span>
+                            <span onclick="toggleQuality(this)" class="rank-badge bg-slate-800 border border-slate-600 text-slate-300 px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-widest">Light</span>
+                            <span onclick="toggleQuality(this)" class="rank-badge bg-slate-800 border border-slate-600 text-slate-300 px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-widest">Memories</span>
+                            <span onclick="toggleQuality(this)" class="rank-badge bg-slate-800 border border-slate-600 text-slate-300 px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-widest">Privacy</span>
+                            <span onclick="toggleQuality(this)" class="rank-badge bg-slate-800 border border-slate-600 text-slate-300 px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-widest">Size</span>
+                            <span onclick="toggleQuality(this)" class="rank-badge bg-slate-800 border border-slate-600 text-slate-300 px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-widest">Smells</span>
+                            <span onclick="toggleQuality(this)" class="rank-badge bg-slate-800 border border-slate-600 text-slate-300 px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-widest">Sounds</span>
+                        </div>
+                        <p id="rank-counter" class="text-xs text-amber-500 mt-3 font-bold">0 / 3 Selected</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pre-Task: Materials Word Bank -->
+            <div class="mb-10 bg-slate-900/50 p-6 rounded-xl border border-slate-700 print-hide">
+                <div class="flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-full bg-sky-500/20 text-sky-500 flex items-center justify-center font-bold border border-sky-500/30 flex-shrink-0"><i class="fa-solid fa-couch"></i></div>
+                    <div class="w-full">
+                        <h3 class="text-lg font-bold text-white mb-2">Build with Materials</h3>
+                        <p class="text-sm text-slate-400 mb-4">What is your furniture and room made of? Tap the <strong class="text-sky-400">B1+ materials</strong> you want to include in your description to highlight them.</p>
+                        
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <div class="bg-slate-800 border border-slate-600 p-3 rounded-lg flex flex-col hover:border-sky-400 transition cursor-pointer select-none" onclick="this.classList.toggle('border-sky-400'); this.classList.toggle('bg-sky-900/30'); this.classList.toggle('shadow-[0_0_10px_rgba(14,165,233,0.2)]')">
+                                <span class="text-sky-300 font-bold mb-1">Wooden</span>
+                                <span class="text-xs text-slate-400 italic">floorboards, desk, shelves</span>
+                            </div>
+                            <div class="bg-slate-800 border border-slate-600 p-3 rounded-lg flex flex-col hover:border-sky-400 transition cursor-pointer select-none" onclick="this.classList.toggle('border-sky-400'); this.classList.toggle('bg-sky-900/30'); this.classList.toggle('shadow-[0_0_10px_rgba(14,165,233,0.2)]')">
+                                <span class="text-sky-300 font-bold mb-1">Leather</span>
+                                <span class="text-xs text-slate-400 italic">armchair, sofa, chair</span>
+                            </div>
+                            <div class="bg-slate-800 border border-slate-600 p-3 rounded-lg flex flex-col hover:border-sky-400 transition cursor-pointer select-none" onclick="this.classList.toggle('border-sky-400'); this.classList.toggle('bg-sky-900/30'); this.classList.toggle('shadow-[0_0_10px_rgba(14,165,233,0.2)]')">
+                                <span class="text-sky-300 font-bold mb-1">Glass</span>
+                                <span class="text-xs text-slate-400 italic">coffee table, mirror, window</span>
+                            </div>
+                            <div class="bg-slate-800 border border-slate-600 p-3 rounded-lg flex flex-col hover:border-sky-400 transition cursor-pointer select-none" onclick="this.classList.toggle('border-sky-400'); this.classList.toggle('bg-sky-900/30'); this.classList.toggle('shadow-[0_0_10px_rgba(14,165,233,0.2)]')">
+                                <span class="text-sky-300 font-bold mb-1">Velvet</span>
+                                <span class="text-xs text-slate-400 italic">curtains, cushions, blanket</span>
+                            </div>
+                            <div class="bg-slate-800 border border-slate-600 p-3 rounded-lg flex flex-col hover:border-sky-400 transition cursor-pointer select-none" onclick="this.classList.toggle('border-sky-400'); this.classList.toggle('bg-sky-900/30'); this.classList.toggle('shadow-[0_0_10px_rgba(14,165,233,0.2)]')">
+                                <span class="text-sky-300 font-bold mb-1">Ceramic</span>
+                                <span class="text-xs text-slate-400 italic">tiles, vase, plant pot</span>
+                            </div>
+                            <div class="bg-slate-800 border border-slate-600 p-3 rounded-lg flex flex-col hover:border-sky-400 transition cursor-pointer select-none" onclick="this.classList.toggle('border-sky-400'); this.classList.toggle('bg-sky-900/30'); this.classList.toggle('shadow-[0_0_10px_rgba(14,165,233,0.2)]')">
+                                <span class="text-sky-300 font-bold mb-1">Metal / Steel</span>
+                                <span class="text-xs text-slate-400 italic">bed frame, radiator, lamp</span>
+                            </div>
+                            <div class="bg-slate-800 border border-slate-600 p-3 rounded-lg flex flex-col hover:border-sky-400 transition cursor-pointer select-none" onclick="this.classList.toggle('border-sky-400'); this.classList.toggle('bg-sky-900/30'); this.classList.toggle('shadow-[0_0_10px_rgba(14,165,233,0.2)]')">
+                                <span class="text-sky-300 font-bold mb-1">Woolen</span>
+                                <span class="text-xs text-slate-400 italic">rug, carpet, throw blanket</span>
+                            </div>
+                            <div class="bg-slate-800 border border-slate-600 p-3 rounded-lg flex flex-col hover:border-sky-400 transition cursor-pointer select-none" onclick="this.classList.toggle('border-sky-400'); this.classList.toggle('bg-sky-900/30'); this.classList.toggle('shadow-[0_0_10px_rgba(14,165,233,0.2)]')">
+                                <span class="text-sky-300 font-bold mb-1">Marble</span>
+                                <span class="text-xs text-slate-400 italic">countertop, fireplace, table</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="text-xl font-bold text-sky-400 mb-6 uppercase tracking-widest print-hide"><i class="fa-solid fa-list-ol mr-2"></i> Think and Plan</h3>
+
+            <!-- The 5 Guided Steps -->
+            <div class="space-y-6">
+                
+                <!-- Step 1: Visuals -->
+                <div class="step-container">
+                    <p class="step-title text-white font-bold mb-2">1. The First Look</p>
+                    <p class="text-sm text-slate-400 mb-3 print-hide">Imagine you are standing outside the room. Open the door and walk in. What do you see inside? What furniture and objects do you see?</p>
+                    <textarea class="w-full bg-slate-900 border border-slate-700 rounded-lg p-4 text-slate-200 focus:outline-none focus:border-sky-500 resize-y" rows="3" placeholder="I see a large, wooden desk pushed against the bright window..."></textarea>
+                </div>
+
+                <!-- Step 2: Special Objects -->
+                <div class="step-container">
+                    <p class="step-title text-white font-bold mb-2">2. Special Objects</p>
+                    <p class="text-sm text-slate-400 mb-3 print-hide">Are there any objects that are special in the room? Why are they special? How are they used?</p>
+                    <textarea class="w-full bg-slate-900 border border-slate-700 rounded-lg p-4 text-slate-200 focus:outline-none focus:border-sky-500 resize-y" rows="3" placeholder="My grandfather's old armchair sits in the corner. I use it to read..."></textarea>
+                </div>
+
+                <!-- Step 3: Smells -->
+                <div class="step-container">
+                    <p class="step-title text-white font-bold mb-2">3. The Scent</p>
+                    <p class="text-sm text-slate-400 mb-3 print-hide">How does the room smell? If it's the kitchen, for example, can you smell food cooking?</p>
+                    <textarea class="w-full bg-slate-900 border border-slate-700 rounded-lg p-4 text-slate-200 focus:outline-none focus:border-amber-500 resize-y" rows="2" placeholder="There is a comforting, musty smell of old paper from my bookshelves..."></textarea>
+                </div>
+
+                <!-- Step 4: Sounds & Action -->
+                <div class="step-container">
+                    <p class="step-title text-white font-bold mb-2">4. Sounds & Action</p>
+                    <p class="text-sm text-slate-400 mb-3 print-hide">What noises do you hear in the room? Are there people in the room? What are they doing?</p>
+                    <textarea class="w-full bg-slate-900 border border-slate-700 rounded-lg p-4 text-slate-200 focus:outline-none focus:border-amber-500 resize-y" rows="2" placeholder="I can hear the muffled, rhythmic sound of the traffic outside the window..."></textarea>
+                </div>
+
+                <!-- Step 5: Memories & Feelings -->
+                <div class="step-container">
+                    <p class="step-title text-white font-bold mb-2">5. Memories & Atmosphere</p>
+                    <p class="text-sm text-slate-400 mb-3 print-hide">Think of any happy memories you associate with the room. How does being in the room make you feel?</p>
+                    <textarea class="w-full bg-slate-900 border border-slate-700 rounded-lg p-4 text-slate-200 focus:outline-none focus:border-rose-500 resize-y" rows="3" placeholder="This room gives me a deep sense of belonging. I remember celebrating..."></textarea>
+                </div>
+
+            </div>
+
+            <!-- Print/Export Action -->
+            <div class="mt-10 text-center print-hide border-t border-slate-700 pt-8">
+                <button onclick="prepareAndPrint()" class="bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-400 hover:to-indigo-400 text-white font-bold py-4 px-10 rounded-full uppercase tracking-widest text-sm shadow-[0_0_20px_rgba(14,165,233,0.4)] transition-transform hover:scale-105">
+                    <i class="fa-solid fa-print mr-2"></i> Print My Outline
+                </button>
+                <p class="text-xs text-slate-500 mt-4">This will hide the menus and print a clean copy of your notes to use for your final draft.</p>
+            </div>
+
+        </section>
+    </main>
+
+    <script>
+        // --- Teacher's Word Bank Data ---
+        const wordData = {
+            sight: [
+                { word: "Spacious", assoc: "a spacious living area, lots of room" },
+                { word: "Messy", assoc: "a messy desk, filled with random objects" },
+                { word: "Spotless", assoc: "spotlessly clean, shining floors" },
+                { word: "Dark", assoc: "a dark corner, soft warm shadows" },
+                { word: "Colorful", assoc: "colorful walls, bright and energetic" },
+                { word: "Crowded", assoc: "a crowded space, barely enough room to walk" },
+                { word: "Old-fashioned", assoc: "old-fashioned wallpaper, traditional style" },
+                { word: "Organized", assoc: "perfectly organized, everything in its place" },
+                { word: "Vibrant", assoc: "vibrant decorations, full of bright energy" }
+            ],
+            sound: [
+                { word: "Noisy", assoc: "very noisy, loud traffic outside" },
+                { word: "Distant", assoc: "distant voices from the hallway" },
+                { word: "Echoing", assoc: "footsteps echoing in the empty hall" },
+                { word: "Peaceful", assoc: "a peaceful silence, completely quiet" },
+                { word: "Lively", assoc: "the lively noise of family talking" },
+                { word: "Creaking", assoc: "creaking wooden floorboards" },
+                { word: "Buzzing", assoc: "the quiet buzzing of the computer" },
+                { word: "Silent", assoc: "completely silent, no sound at all" },
+                { word: "Muffled", assoc: "muffled voices coming through the walls" }
+            ],
+            smell: [
+                { word: "Sweet", assoc: "sweet flowers by the window" },
+                { word: "Dusty", assoc: "dusty old books, needing fresh air" },
+                { word: "Spicy", assoc: "the spicy scent of cooking and food" },
+                { word: "Stale", assoc: "stale air, needing an open window" },
+                { word: "Delicious", assoc: "delicious smell of baking bread" },
+                { word: "Familiar", assoc: "a familiar smell that reminds me of childhood" },
+                { word: "Fresh", assoc: "a fresh, clean breeze from outside" },
+                { word: "Strong", assoc: "a strong smell of cleaning chemicals" },
+                { word: "Musty", assoc: "a musty smell, like an old bookstore" }
+            ],
+            atmosphere: [
+                { word: "Cozy", assoc: "a cozy atmosphere, warm and inviting" },
+                { word: "Welcoming", assoc: "a highly welcoming and friendly space" },
+                { word: "Relaxing", assoc: "a relaxing environment, calming the mind" },
+                { word: "Lively", assoc: "a lively energy, messy but fun" },
+                { word: "Private", assoc: "a private space, a safe hiding place" },
+                { word: "Lonely", assoc: "feeling lonely, empty and quiet" },
+                { word: "Inspiring", assoc: "an inspiring room that boosts creativity" },
+                { word: "Comfortable", assoc: "feeling comfortable and completely at home" },
+                { word: "Nostalgic", assoc: "feeling nostalgic, remembering the good old days" }
+            ]
+        };
+
+        // --- Logic for Teacher's Word Bank ---
+        function showVocab(category) {
+            // Update active tab
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`tab-${category}`).classList.add('active');
+
+            // Render grid
+            const grid = document.getElementById('vocab-grid');
+            grid.innerHTML = '';
+            
+            const words = wordData[category];
+            words.forEach((item, index) => {
+                // Add slight delay for waterfall animation
+                const delay = index * 0.05;
+                const card = document.createElement('div');
+                card.className = `bg-slate-800/80 p-4 rounded-xl border border-slate-700 shadow-inner fade-in`;
+                card.style.animationDelay = `${delay}s`;
+                card.style.opacity = '0';
+                
+                let iconColor = category === 'sight' ? 'text-sky-400' : 
+                                category === 'sound' ? 'text-indigo-400' : 
+                                category === 'smell' ? 'text-emerald-400' : 'text-rose-400';
+
+                card.innerHTML = `
+                    <h3 class="text-xl font-bold text-white mb-1 flex items-center gap-2">
+                        <i class="fa-solid fa-caret-right ${iconColor} text-sm"></i> ${item.word}
+                    </h3>
+                    <p class="text-sm text-slate-400 italic bg-slate-900/50 px-2 py-1 rounded">...${item.assoc}</p>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function toggleTeacherPanel() {
+            const content = document.getElementById('teacher-panel-content');
+            const btn = document.getElementById('btn-toggle-teacher');
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                btn.innerHTML = 'Hide Panel <i class="fa-solid fa-chevron-up ml-1"></i>';
+            } else {
+                content.style.display = 'none';
+                btn.innerHTML = 'Show Word Bank <i class="fa-solid fa-chevron-down ml-1"></i>';
+            }
+        }
+
+        // --- Logic for Student Priority Ranking ---
+        let selectedQualities = 0;
+        function toggleQuality(element) {
+            if (element.classList.contains('selected')) {
+                element.classList.remove('selected');
+                selectedQualities--;
+            } else {
+                if (selectedQualities < 3) {
+                    element.classList.add('selected');
+                    selectedQualities++;
+                } else {
+                    // Shake animation if they try to pick more than 3
+                    element.style.animation = 'none';
+                    element.offsetHeight; // trigger reflow
+                    element.style.animation = 'shake 0.4s ease-in-out';
+                }
+            }
+            document.getElementById('rank-counter').textContent = `${selectedQualities} / 3 Selected`;
+            
+            if (selectedQualities === 3) {
+                document.getElementById('rank-counter').classList.replace('text-amber-500', 'text-emerald-400');
+                document.getElementById('rank-counter').textContent += " (Perfect!)";
+            } else {
+                document.getElementById('rank-counter').classList.replace('text-emerald-400', 'text-amber-500');
+            }
+        }
+
+        // --- Formatting Textareas for Printing ---
+        function prepareAndPrint() {
+            // Adjust textarea heights so all text is visible in print
+            const textareas = document.querySelectorAll('textarea');
+            textareas.forEach(ta => {
+                // Reset height to get actual scroll height
+                ta.style.height = 'auto';
+                if (ta.value.trim() !== '') {
+                    ta.style.height = (ta.scrollHeight) + 'px';
+                } else {
+                    ta.value = "[No notes recorded]";
+                    ta.style.color = "#94a3b8"; // slate-400
+                }
+            });
+            window.print();
+        }
+
+        // Initialize on load
+        window.onload = () => {
+            showVocab('sight');
+        };
+
+        // Shake keyframe for error
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-5px); }
+                50% { transform: translateX(5px); }
+                75% { transform: translateX(-5px); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
