@@ -188,7 +188,7 @@
                     <div class="w-10 h-10 rounded-full bg-sky-500/20 text-sky-500 flex items-center justify-center font-bold border border-sky-500/30 flex-shrink-0"><i class="fa-solid fa-couch"></i></div>
                     <div class="w-full">
                         <h3 class="text-lg font-bold text-white mb-2">Build with Materials</h3>
-                        <p class="text-sm text-slate-400 mb-4">What is your furniture and room made of? Tap the <strong class="text-sky-400">B1+ materials</strong> you want to include in your description to highlight them.</p>
+                        <p class="text-sm text-slate-400 mb-4">What is your furniture and room made of? Tap the <strong class="text-sky-400">materials</strong> you want to include in your description to highlight them.</p>
                         
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                             <div class="bg-slate-800 border border-slate-600 p-3 rounded-lg flex flex-col hover:border-sky-400 transition cursor-pointer select-none" onclick="this.classList.toggle('border-sky-400'); this.classList.toggle('bg-sky-900/30'); this.classList.toggle('shadow-[0_0_10px_rgba(14,165,233,0.2)]')">
@@ -222,6 +222,65 @@
                             <div class="bg-slate-800 border border-slate-600 p-3 rounded-lg flex flex-col hover:border-sky-400 transition cursor-pointer select-none" onclick="this.classList.toggle('border-sky-400'); this.classList.toggle('bg-sky-900/30'); this.classList.toggle('shadow-[0_0_10px_rgba(14,165,233,0.2)]')">
                                 <span class="text-sky-300 font-bold mb-1">Marble</span>
                                 <span class="text-xs text-slate-400 italic">countertop, fireplace, table</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pre-Task: Analyze the Model -->
+            <div class="mb-10 bg-slate-900/50 p-6 rounded-xl border border-slate-700 print-hide">
+                <div class="flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-500 flex items-center justify-center font-bold border border-emerald-500/30 flex-shrink-0"><i class="fa-solid fa-book-open"></i></div>
+                    <div class="w-full">
+                        <h3 class="text-lg font-bold text-white mb-2">Analyze the Model: Sandra's Kitchen</h3>
+                        <p class="text-sm text-slate-400 mb-6">Read Sandra's description. Notice the <span class="bg-sky-500/20 text-sky-300 px-1 rounded font-medium">highlighted sensory words</span>. Then, select the correct paragraph (A, B, or C) that matches the structural summaries below.</p>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- The Text -->
+                            <div class="bg-slate-800 border border-slate-600 rounded-lg p-5 text-sm text-slate-300 space-y-4 shadow-inner">
+                                <p><strong class="text-white text-base bg-rose-600 px-2 py-0.5 rounded mr-2">A</strong> The most special room in our house is the kitchen. When I open the door, what's the first thing I notice? The <span class="bg-sky-500/20 text-sky-300 px-1 rounded">smell of cooking</span> and the noise. You can often <span class="bg-sky-500/20 text-sky-300 px-1 rounded">hear people talking or laughing</span>, and <span class="bg-sky-500/20 text-sky-300 px-1 rounded">the sound of pots and pans</span>, because someone is usually preparing food! I always feel comfortable and at home in the kitchen - it's the center of family life.</p>
+                                
+                                <p><strong class="text-white text-base bg-rose-600 px-2 py-0.5 rounded mr-2">B</strong> In the middle of the kitchen is my favorite piece of furniture - a long wooden table. It <span class="bg-sky-500/20 text-sky-300 px-1 rounded">looks old and worn</span>, but it's the place where people sit and work or talk. It's used for special occasions like my grandma's birthday, when we all sit around the table. It's also used for everyday activities, like my brother's homework. My dad sometimes makes pancakes there, too - they <span class="bg-sky-500/20 text-sky-300 px-1 rounded">taste delicious</span>! The table is always messy because everyone leaves their stuff on it. There are house keys, schoolbooks, letters to mail, as well as notes and reminders about school trips and homework assignments. The things on the table tell you a lot about our family and what we do.</p>
+                                
+                                <p><strong class="text-white text-base bg-rose-600 px-2 py-0.5 rounded mr-2">C</strong> To sum up, the kitchen is my favorite room because it's full of life. It's the busiest and noisiest place in the house, and I like it that way. It's the room where I feel most comfortable and happy. And that's why I love it.</p>
+                            </div>
+                            
+                            <!-- The Matching Activity -->
+                            <div class="space-y-4 flex flex-col justify-center">
+                                <div class="bg-slate-800 border border-slate-600 rounded-lg p-4 flex flex-col gap-3 transition-colors duration-300" id="box-1">
+                                    <p class="text-sm text-slate-300 leading-relaxed"><strong>1.</strong> Focuses on a special piece of furniture or an object in the room. Describes it and says what it is used for, and what it reminds her of, e.g., a special occasion.</p>
+                                    <select class="model-select w-full bg-slate-900 border border-slate-500 text-white rounded p-2 text-sm focus:border-emerald-500 outline-none transition-colors" data-correct="B" onchange="checkModelStructure()">
+                                        <option value="">Select Paragraph...</option>
+                                        <option value="A">Paragraph A</option>
+                                        <option value="B">Paragraph B</option>
+                                        <option value="C">Paragraph C</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="bg-slate-800 border border-slate-600 rounded-lg p-4 flex flex-col gap-3 transition-colors duration-300" id="box-2">
+                                    <p class="text-sm text-slate-300 leading-relaxed"><strong>2.</strong> Sums up why she chose this room and what makes it special.</p>
+                                    <select class="model-select w-full bg-slate-900 border border-slate-500 text-white rounded p-2 text-sm focus:border-emerald-500 outline-none transition-colors" data-correct="C" onchange="checkModelStructure()">
+                                        <option value="">Select Paragraph...</option>
+                                        <option value="A">Paragraph A</option>
+                                        <option value="B">Paragraph B</option>
+                                        <option value="C">Paragraph C</option>
+                                    </select>
+                                </div>
+
+                                <div class="bg-slate-800 border border-slate-600 rounded-lg p-4 flex flex-col gap-3 transition-colors duration-300" id="box-3">
+                                    <p class="text-sm text-slate-300 leading-relaxed"><strong>3.</strong> Introduces the room. Says what she notices first - the sounds and smells. Gives a brief description of the room, and says how she feels about it.</p>
+                                    <select class="model-select w-full bg-slate-900 border border-slate-500 text-white rounded p-2 text-sm focus:border-emerald-500 outline-none transition-colors" data-correct="A" onchange="checkModelStructure()">
+                                        <option value="">Select Paragraph...</option>
+                                        <option value="A">Paragraph A</option>
+                                        <option value="B">Paragraph B</option>
+                                        <option value="C">Paragraph C</option>
+                                    </select>
+                                </div>
+
+                                <div id="structure-feedback" class="hidden p-3 rounded-lg text-center font-bold text-sm tracking-widest uppercase transition-all duration-300">
+                                    <!-- Feedback injected here -->
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -399,6 +458,51 @@
                 document.getElementById('rank-counter').textContent += " (Perfect!)";
             } else {
                 document.getElementById('rank-counter').classList.replace('text-emerald-400', 'text-amber-500');
+            }
+        }
+
+        // --- Logic for Model Structure Matching ---
+        function checkModelStructure() {
+            const selects = document.querySelectorAll('.model-select');
+            let allCorrect = true;
+            let allAnswered = true;
+
+            selects.forEach((select, index) => {
+                const box = document.getElementById(`box-${index + 1}`);
+                if (select.value === "") {
+                    allAnswered = false;
+                    select.classList.remove('border-emerald-500', 'text-emerald-400', 'border-rose-500', 'text-rose-400');
+                    select.classList.add('border-slate-500', 'text-white');
+                    box.classList.remove('border-emerald-500/50', 'border-rose-500/50');
+                    box.classList.add('border-slate-600');
+                } else if (select.value === select.dataset.correct) {
+                    select.classList.remove('border-slate-500', 'text-white', 'border-rose-500', 'text-rose-400');
+                    select.classList.add('border-emerald-500', 'text-emerald-400');
+                    box.classList.remove('border-slate-600', 'border-rose-500/50');
+                    box.classList.add('border-emerald-500/50');
+                } else {
+                    allCorrect = false;
+                    select.classList.remove('border-slate-500', 'text-white', 'border-emerald-500', 'text-emerald-400');
+                    select.classList.add('border-rose-500', 'text-rose-400');
+                    box.classList.remove('border-slate-600', 'border-emerald-500/50');
+                    box.classList.add('border-rose-500/50');
+                }
+            });
+
+            const feedback = document.getElementById('structure-feedback');
+            if (allAnswered) {
+                feedback.classList.remove('hidden');
+                if (allCorrect) {
+                    feedback.classList.remove('bg-rose-500/20', 'text-rose-400', 'border-rose-500');
+                    feedback.classList.add('bg-emerald-500/20', 'text-emerald-400', 'border', 'border-emerald-500');
+                    feedback.innerHTML = '<i class="fa-solid fa-check mr-2"></i> Structure Mastered! Now draft your own below.';
+                } else {
+                    feedback.classList.remove('bg-emerald-500/20', 'text-emerald-400', 'border-emerald-500');
+                    feedback.classList.add('bg-rose-500/20', 'text-rose-400', 'border', 'border-rose-500');
+                    feedback.innerHTML = '<i class="fa-solid fa-xmark mr-2"></i> Keep trying! Review the paragraphs.';
+                }
+            } else {
+                feedback.classList.add('hidden');
             }
         }
 
